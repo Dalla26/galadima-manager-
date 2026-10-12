@@ -2,12 +2,14 @@ name: Build macOS App
 
 on:
   push:
-    branches: [ principal, main ]
+    branches: [ main, principal ]
   workflow_dispatch:
 
 jobs:
   build-macos:
-    runs-on: macos-latest
+    runs-on: macos-13
+    env:
+      MACOSX_DEPLOYMENT_TARGET: 11.0
     
     steps:
       - name: Checkout code
@@ -26,10 +28,10 @@ jobs:
       
       - name: Build with PyInstaller
         run: |
-          pyinstaller --onefile --windowed --name "Galadima" --collect-all flet app.py
+          pyinstaller --windowed --onedir --name "Galadima" --osx-bundle-identifier "com.galadima.app" --collect-all flet app.py
       
       - name: Upload macOS App
         uses: actions/upload-artifact@v4
         with:
-          name: Galadima-macOS
+          name: Galadima-macOS-Intel
           path: dist/
